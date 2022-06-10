@@ -1,0 +1,6 @@
+ [
+  { "id": "id-1", "name": "Rosie Simpson", "number": "+38(093) 255-55-56" },
+  { "id": "id-2", "name": "Hermione Kline", "number": "+38(067) 138-00-88" },
+  { "id": "id-3", "name": "Eden Clements", "number": "+38(069) 767-77-90" },
+  { "id": "id-4", "name": "Annie Copeland", "number": "+38(099) 007-21-11" }
+]
