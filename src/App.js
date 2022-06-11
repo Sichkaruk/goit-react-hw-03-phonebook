@@ -9,7 +9,7 @@ import { Container, Title, ContactsTitle, Message } from "./App.styled";
 
 class App extends Component {
   state = {
-    contacts: [...INITIAL_STATE],
+    contacts: [],
     filter: [],
   };
 
@@ -21,6 +21,7 @@ class App extends Component {
     this.setState(() => ({
       contacts: newContacts,
     }));
+    this.saveToLocalStorage();
   };
 
   onDelete = (id) => {
@@ -29,7 +30,7 @@ class App extends Component {
       if (contacts[i].id === id) {
         const name = contacts[i].name;
         contacts.splice(i, 1);
-        this.alert(name, "info");
+        toastMsg(name, "info");;
         break;
       }
     }
@@ -40,6 +41,20 @@ class App extends Component {
     toastMsg(name, type);
   };
 
+  saveToLocalStorage() {
+    const arrContacts = [];
+    this.state.contacts.map((contact) => arrContacts.push(contact));
+    localStorage.setItem("contacts", JSON.stringify(arrContacts));
+  }
+
+  componentDidMount = () => {
+    if (localStorage.getItem("contacts")) {
+      this.setState({
+        contacts: JSON.parse(localStorage.getItem("contacts")),
+      });
+    }
+  };
+
   render() {
     const {
       state: { contacts, filter },
@@ -48,7 +63,7 @@ class App extends Component {
       onDelete,
     } = this;
 
-    const onContctsGroup = contacts.length ? true : false;
+    const onContctsGroup = contacts.length !== 0  ? true : false;
     const onContactsFilter = contacts.length >= 2 ? true : false;
 
     return (
