@@ -34,7 +34,7 @@ export const ContactNoteItem = styled.span`
 `;
 
 export const Link = styled.a`
-  margin-left: ${spacing(1)};
+  margin-left: ${spacing(2)};
   color: inherit;
   text-decoration: none;
   font-weight: 700;
