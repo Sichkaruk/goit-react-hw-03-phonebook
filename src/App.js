@@ -1,10 +1,10 @@
 import React, { Component } from "react";
-import INITIAL_STATE from "./components/data/initial-state.json";
 import ContactForm from "./components/ContactForm/ContactForm";
 import Filter from "./components/Filter/Filter";
 import ContactList from "./components/ContactList/ContactList";
 import "react-toastify/dist/ReactToastify.css";
 import toastMsg from "./utils/toast";
+import { nanoid } from "nanoid";
 import { Container, Title, ContactsTitle, Message } from "./App.styled";
 
 class App extends Component {
@@ -17,24 +17,43 @@ class App extends Component {
     this.setState(() => ({ filter: w.toLowerCase() }));
   };
 
-  onChangeState = (newContacts) => {
-    this.setState(() => ({
-      contacts: newContacts,
+    onChangeState = (name, number) => {
+    if (this.matchCheckName(name, this.state.contacts)) {
+      toastMsg(name, "warn");
+      return "not success";
+    }
+
+    const newContact = [{ id: nanoid(), name: name, number: number }];
+
+    this.setState((s) => ({
+      contacts: s.contacts.concat(newContact),
     }));
+
     this.saveToLocalStorage();
+    toastMsg(name, "success");
+    return "success";
   };
 
-  onDelete = (id) => {
-    const { contacts } = this.state;
+   matchCheckName = (name, contacts) => {
     for (let i = 0; i < contacts.length; i += 1) {
-      if (contacts[i].id === id) {
-        const name = contacts[i].name;
-        contacts.splice(i, 1);
-        toastMsg(name, "info");;
+      if (contacts[i].name === name) return true;
+    }
+    return false;
+   };
+  
+  onDelete = (id) => {
+    const newContacts = this.state.contacts;
+
+    for (let i = 0; i < newContacts.length; i += 1) {
+      if (newContacts[i].id === id) {
+        const name = newContacts[i].name;
+        newContacts.splice(i, 1);
+        this.setState({ contacts: newContacts });
+        toastMsg(name, "info");
+        this.saveToLocalStorage();
         break;
       }
     }
-    this.onChangeState(contacts);
   };
 
   alert = (name, type) => {

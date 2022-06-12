@@ -1,7 +1,5 @@
 import React, { Component } from "react";
-import { nanoid } from "nanoid";
 import { ToastContainer } from "react-toastify";
-import toastMsg from "../../utils/toast.js";
 import { IconContext } from "react-icons";
 import { FaRegUserCircle } from "react-icons/fa";
 import { BsTelephone } from "react-icons/bs";
@@ -18,30 +16,15 @@ class ContactForm extends Component {
 
   handleInput = (e) => {
     const { value, name } = e.target;
-    this.setState(() => ({ [name]: value }));
+    this.setState({ [name]: value });
   };
 
   handleSubmit = (e) => {
     e.preventDefault();
     const { name, number } = this.state;
-    const { contacts, onChangeState } = this.props;
-    if (this.matchCheck(name, contacts)) return  toastMsg(name, "warn");
-    contacts.push({ id: nanoid(), name: name, number: number });
-    this.setState(() => ({ number: number }));
-    onChangeState(contacts);
-    this.reset();
-    toastMsg(name, "success");;
-  };
-
-  matchCheck = (name, contacts) => {
-    for (let i = 0; i < contacts.length; i += 1) {
-      if (contacts[i].name === name) return true;
-    }
-    return false;
-  };
-
-  alert = (name, type) => {
-    toastMsg(name, type);
+    const { onChangeState } = this.props;
+    this.setState({ number });
+    if (onChangeState(name, number) === "success") this.reset();
   };
 
   reset = () => {
