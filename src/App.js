@@ -13,8 +13,8 @@ class App extends Component {
     filter: [],
   };
 
-  onFilter = (w) => {
-    this.setState(() => ({ filter: w.toLowerCase() }));
+  onFilter = (word) => {
+    this.setState({ filter: word.toLowerCase() });
   };
 
     onChangeState = (name, number) => {
@@ -29,7 +29,6 @@ class App extends Component {
       contacts: s.contacts.concat(newContact),
     }));
 
-    this.saveToLocalStorage();
     toastMsg(name, "success");
     return "success";
   };
@@ -50,9 +49,11 @@ class App extends Component {
         newContacts.splice(i, 1);
         this.setState({ contacts: newContacts });
         toastMsg(name, "info");
-        this.saveToLocalStorage();
         break;
       }
+    }
+    if (this.state.contacts.length <= 1) {
+      this.onFilter("");
     }
   };
 
@@ -74,6 +75,11 @@ class App extends Component {
     }
   };
 
+   componentDidUpdate = (prevState) => {
+    if (prevState.contacts !== this.state.contacts)
+      localStorage.setItem("contacts", JSON.stringify(this.state.contacts));
+   };
+  
   render() {
     const {
       state: { contacts, filter },
@@ -83,7 +89,7 @@ class App extends Component {
     } = this;
 
     const onContctsGroup = contacts.length !== 0  ? true : false;
-    const onContactsFilter = contacts.length >= 2 ? true : false;
+    const onContactsFilter = contacts.length >= 1 ? true : false;
 
     return (
       <Container>
@@ -92,7 +98,7 @@ class App extends Component {
          {onContctsGroup ? (
           <>
             <ContactsTitle>Contacts</ContactsTitle>
-            {onContactsFilter && <Filter onFilter={onFilter} />}
+            {onContactsFilter && <Filter onFilter={onFilter} filter={filter} />}
             <ContactList
               contacts={contacts}
               filter={filter}

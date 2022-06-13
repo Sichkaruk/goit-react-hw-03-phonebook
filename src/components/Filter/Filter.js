@@ -12,6 +12,7 @@ class Filter extends Component {
 
   render() {
     const { handleInput } = this;
+    const { filter } = this.props;
     return (
       <Container>
         <Label htmlFor="inputFilter">
@@ -22,6 +23,7 @@ class Filter extends Component {
           id="inputFilter"
           type="text"
           name="filter"
+          value={filter}
           onChange={handleInput}
         ></Input>
       </Container>
